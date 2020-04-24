@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import LoadingBadge from './LoadingBadge';
 
 class Header extends Component {
     render() {
         return(
-        <header>
-            <h1 className="navbar-brand">REAK8S</h1>
-        </header>);
+        <nav className="navbar navbar-light bg-light">
+            <a className="navbar-brand" href="#">REAK8S</a>
+            <LoadingBadge />
+        </nav>);
     }
 }
 

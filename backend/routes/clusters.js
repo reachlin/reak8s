@@ -4,15 +4,30 @@ const router = express.Router();
 const fs = require('fs');
 const formidable = require('formidable');
 const { KubeConfig, Client } = require("kubernetes-client");
-const kubeconfig = new KubeConfig();
-kubeconfig.loadFromFile("./config/lincai20200224.yaml");
 const Request = require("kubernetes-client/backends/request");
-const backend = new Request({ kubeconfig });
-const client = new Client({ backend, version: "1.13" });
 
 var clusters = new Map();
 
-/* GET users listing. */
+function getKubeClient(clusterName) {
+  let cluster = clusters.get(clusterName);
+  if (cluster) {
+    let client = cluster.client;
+    if (client)
+      return cluster.client;
+    else {
+      const kubeconfig = new KubeConfig();
+      kubeconfig.loadFromFile(cluster.config);      
+      const backend = new Request({ kubeconfig });
+      client = new Client({ backend, version: "1.13" });
+      cluster['client'] = client;
+      clusters.set(clusterName, cluster);
+      return client;
+    }
+  } else {
+    return null;
+  }
+}
+
 router.get("/", function(req, res, next) {
   console.log(clusters);
   let rsp = [];
@@ -22,8 +37,35 @@ router.get("/", function(req, res, next) {
   res.json(rsp);
 });
 
+router.get("/namespace", function(req, res, next) {
+  console.log(req.query.cluster);
+  if (req.query.cluster) {
+    let client = getKubeClient(req.query.cluster);
+    if (client) {
+      client.api.v1.namespaces.get().then(rsp => {
+        if (rsp.body.items)
+          res.json({data: rsp.body.items});
+        else 
+          res.json({error: rsp});
+      });
+    } else {
+      res.json({error: `not found ${req.query.cluster}`});
+    }
+  } else 
+    res.json({error: 'no cluster parameter'});
+});
+
 router.get("/nodes", function(req, res, next) {
+  let client = getKubeClient(req.query.cluster);
   client.api.v1.nodes.get().then(rsp => {
+    if (rsp.body) res.json(rsp.body);
+    else res.json({});
+  });
+});
+
+router.get("/pods", function(req, res, next) {
+  let client = getKubeClient(req.query.cluster);
+  client.api.v1.namespaces(req.query.ns).pods.get().then(rsp => {
     if (rsp.body) res.json(rsp.body);
     else res.json({});
   });

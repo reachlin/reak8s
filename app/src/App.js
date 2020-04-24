@@ -3,30 +3,24 @@ import {Container, Row, Col} from "react-bootstrap";
 import logo from "./logo.svg";
 import "./App.css";
 import ClusterBar from "./ClusterBar";
+import NameSpaceBar from "./NameSpaceBar";
+import PodTable from './PodTable';
 
 class App extends Component {
-  state = { nodes: [] };
-
-  componentDidMount() {
-    fetch("/clusters/nodes")
-      .then(res => res.json())
-      .then(data => {
-        console.log(data.items);
-        this.setState({ nodes: data.items });
-      });
-  }
+  state = { clusterName: null , nameSpace: null};
 
   render() {
     return (
       <Container fluid>
         <Row>
           <Col md={2}>
-            <ClusterBar />
+            <ClusterBar onClusterSelected={(clusterName) => this.setState({clusterName})}/>
+          </Col>
+          <Col md={2}>
+            <NameSpaceBar onNameSpaceSelected={(nameSpace)=>this.setState({nameSpace})} clusterName={this.state.clusterName} />
           </Col>
           <Col>
-          {this.state.nodes.map(node => (
-            <div key={node.metadata.name}>{node.metadata.name}</div>
-          ))}
+            <PodTable clusterName={this.state.clusterName} nameSpace={this.state.nameSpace} />
           </Col>
         </Row>
       </Container>

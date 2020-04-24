@@ -6,9 +6,10 @@ class ClusterBar extends Component {
     state = { clusters: [] };
 
     fetchCluster(clusterName){
-        console.log(clusterName);
+        this.props.onClusterSelected(clusterName);
     }
     fetchClusters(){
+        console.log('fetch clusters');
         fetch('/clusters').then(res => res.json()).then(json => this.setState({clusters:json}));
     }
     componentDidMount(){
@@ -18,7 +19,7 @@ class ClusterBar extends Component {
         return(
             <div className="list-group">
                 {this.state.clusters.map(cluster => <Button onClick={() => this.fetchCluster(cluster.name)} key={cluster.name} className="list-group-item list-group-item-action">{cluster.name}</Button>)}
-                <AddClusterDialog />
+                <AddClusterDialog onSave={()=>this.fetchClusters()}/>
             </div>
         )
     }

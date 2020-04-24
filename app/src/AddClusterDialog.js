@@ -18,6 +18,7 @@ class AddClusterDialog extends Component {
         }).then((resp) => resp.json())
         .then((data) => {
           console.log('Request succeeded with JSON response', data);
+          this.props.onSave();
         })
         .catch((error) => {
           console.log('Request failed', error);
