@@ -7,7 +7,9 @@
     "dev": "nodemon ./bin/www"
   },
   "nodemonConfig": {
-    "ignore": ["config/*.*"]
+    "ignore": [
+      "config/*.*"
+    ]
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -15,7 +17,6 @@
     "express": "~4.16.1",
     "formidable": "^1.2.2",
     "http-errors": "~1.6.3",
-    "jade": "~1.11.0",
     "kubernetes-client": "^8.3.6",
     "morgan": "~1.9.1"
   }
