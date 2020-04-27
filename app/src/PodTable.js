@@ -1,5 +1,7 @@
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import BootstrapTable from 'react-bootstrap-table-next';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
+import paginationFactory from 'react-bootstrap-table2-paginator';
 import React, { Component } from "react";
 import { trackPromise} from 'react-promise-tracker';
 
@@ -30,18 +32,33 @@ class PodTable extends Component {
     render() {
         const columns = [{
           dataField: 'name',
-          text: 'Name'
+          text: 'Name',
+          sort: true,
+          filter: textFilter()
         },
         {
           dataField: 'status',
-          text: 'Status'
+          text: 'Status',
+          sort: true,
+          filter: textFilter()
         },
         {
           dataField: 'node',
-          text: 'Node'
+          text: 'Node',
+          sort: true,
+          filter: textFilter()
         }];
         return(
-            <BootstrapTable keyField='name' data={ this.state.data } columns={ columns } />
+            <BootstrapTable
+                keyField='name' 
+                data={ this.state.data }
+                columns={ columns }
+                striped
+                hover
+                condensed
+                noDataIndication={()=>'No Data'}
+                filter={ filterFactory() }
+                pagination={ paginationFactory() } />
         )
     }
 }
