@@ -8,10 +8,10 @@ import { trackPromise} from 'react-promise-tracker';
 class PodTable extends Component {
     state = {data: []}
 
-    fetchPods(){
+    fetchResources(){
         console.log('fetch pods');
         trackPromise(
-        fetch(`/clusters/pods?cluster=${this.props.clusterName}&ns=${this.props.nameSpace}`)
+        fetch(`/clusters/resource?rt=${this.props.resourceType}&cluster=${this.props.clusterName}&ns=${this.props.nameSpace}`)
         .then(res => res.json()).then(json => {
             let data = [];
             json.items.map(item => {
@@ -23,9 +23,12 @@ class PodTable extends Component {
     }
  
     componentDidUpdate(prevProps) {
-        if (this.props.clusterName != prevProps.clusterName ||
-            this.props.nameSpace != prevProps.nameSpace) {
-            this.fetchPods();
+        if (this.props.clusterName && this.props.nameSpace && this.props.resourceType) {
+            if (this.props.clusterName !== prevProps.clusterName ||
+                this.props.nameSpace !== prevProps.nameSpace ||
+                this.props.resourceType !== prevProps.resourceType) {
+                this.fetchResources();
+            }
         }
     };
 

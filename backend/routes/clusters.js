@@ -55,17 +55,21 @@ router.get("/namespace", function(req, res, next) {
     res.json({error: 'no cluster parameter'});
 });
 
-router.get("/nodes", function(req, res, next) {
+router.get("/resource", function(req, res, next) {
   let client = getKubeClient(req.query.cluster);
-  client.api.v1.nodes.get().then(rsp => {
+  let rtFunc = client.api.v1.namespaces(req.query.ns)[req.query.rt];
+  rtFunc && rtFunc.get().then(rsp => {
     if (rsp.body) res.json(rsp.body);
     else res.json({});
+  }).catch(err => {
+    console.log(err);
+    res.json({error:err});
   });
 });
 
-router.get("/pods", function(req, res, next) {
+router.get("/api", function(req, res, next) {
   let client = getKubeClient(req.query.cluster);
-  client.api.v1.namespaces(req.query.ns).pods.get().then(rsp => {
+  client.api.v1.get().then(rsp => {
     if (rsp.body) res.json(rsp.body);
     else res.json({});
   });

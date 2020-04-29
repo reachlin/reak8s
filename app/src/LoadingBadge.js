@@ -7,7 +7,9 @@ function LoadingBadge () {
     const { promiseInProgress }= usePromiseTracker();
     let visibility = (promiseInProgress === true) ?'visible':'hidden';
     return (
-            <Button variant="primary" disabled style={{visibility: visibility}}>
+            <Button className="btn-dark btn-lg" disabled >
+              REAK8S
+            <span className='pl-3' style={{visibility: visibility}}>
             <Spinner
               as="span"
               animation="grow"
@@ -15,7 +17,7 @@ function LoadingBadge () {
               role="status"
               aria-hidden="true"
             />
-            Loading...
+            </span>
           </Button>
         );
 }
