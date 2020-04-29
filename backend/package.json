@@ -19,7 +19,7 @@
     "http-errors": "~1.6.3",
     "kubernetes-client": "^8.3.6",
     "morgan": "~1.9.1",
-    "pug": "2.0.0-beta11",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "pug": "^2.0.4"
   }
 }
